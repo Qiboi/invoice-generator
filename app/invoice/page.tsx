@@ -10,11 +10,11 @@ import ActionBar from '@/components/action-bar'
 const initialInvoice: Invoice = {
     invoice_number: 'INV-001',
     issue_date: new Date().toISOString().slice(0, 10),
-    due_date: '',
+    due_date: new Date().toISOString().slice(0, 10),
     currency: 'IDR',
     bill_to: {
-        name: 'Raniandi',
-        company: 'PT Lahap Kalap',
+        name: 'Junferty Sabriani',
+        company: 'PT Lahap Dahar',
         address: 'Jl. Anggrek No. 34, Jakarta',
         phone: '0812-9876-5432',
         email: '',
