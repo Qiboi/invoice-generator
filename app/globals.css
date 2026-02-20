@@ -153,6 +153,7 @@
     /* Do NOT set width:210mm or height:297mm here */
     width: auto !important;
     padding: 0 !important; /* Let .invoice provide its own print padding */
+    min-height: 257mm !important;
   }
 
   /* tables: allow description to wrap; keep header repeated on page breaks */
@@ -162,9 +163,29 @@
     table-layout: auto;
   }
 
-  #invoice-preview th, #invoice-preview td {
+  #invoice-preview th, #invoice-preview td {  
     padding: 6px 4px !important;
     vertical-align: top !important;
+  }
+
+  #invoice-preview .invoice-footer {
+    bottom: 0mm !important;
+    left: 0mm !important;
+    right: 0mm !important;
+  }
+
+  #receipt-preview {
+    width: auto !important;
+    padding: 0 !important; /* use inline padding */
+    min-height: 80mm !important; /* match receipt height */
+  }
+
+  /* anchor footer to page bottom during print */
+  #receipt-preview .receipt-footer {
+    padding: 5mm 5mm !important;
+    background: white;
+    box-sizing: border-box;
+    color: #666;
   }
 
   thead { display: table-header-group; }

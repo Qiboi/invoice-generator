@@ -5,22 +5,45 @@ import React from 'react'
 import { Invoice } from '@/lib/invoice'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
 import InvoiceItemsTable from './invoice-items-table'
 import { Button } from '@/components/ui/button'
+import { Textarea } from './ui/textarea'
+import { Company } from '@/lib/company'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 type Props = {
     invoice: Invoice
+    companyInfo: Company
     setInvoice: (v: Invoice) => void
+    setCompanyInfo: React.Dispatch<React.SetStateAction<Company>>
 }
 
-export default function InvoiceForm({ invoice, setInvoice }: Props) {
+export default function InvoiceForm({ invoice, companyInfo, setInvoice, setCompanyInfo }: Props) {
     // small helpers to update nested fields
     const updateBillTo = (patch: Partial<Invoice['bill_to']>) =>
         setInvoice({ ...invoice, bill_to: { ...invoice.bill_to, ...patch } })
 
     const updateField = (k: keyof Invoice, value: any) =>
         setInvoice({ ...invoice, [k]: value } as Invoice)
+
+    const companyOptions: Company[] = [
+        {
+            name: 'PT. SARR ADHIKARI COMPANY',
+            address: 'Jalan Kungkung No.12, Jakarta Selatan',
+            phone: '(021) 12345678',
+        },
+        {
+            name: 'CV. SELAMAT SENTOSA',
+            address: 'Jl. Mawar No.3, Bandung',
+            phone: '0812-3456-7890',
+        },
+    ]
 
     return (
         <Card className="w-full">
@@ -31,7 +54,42 @@ export default function InvoiceForm({ invoice, setInvoice }: Props) {
 
             <CardContent className="space-y-4">
                 {/* ---------- Invoice meta (number + dates) ---------- */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3">
+                    <label className="flex flex-col space-y-2">
+                        <span className="text-xs text-muted-foreground mb-1">Company Info</span>
+
+                        <Select
+                            value={companyInfo.name}
+                            onValueChange={(value) => {
+                                const preset = companyOptions.find(c => c.name === value)
+
+                                if (preset) {
+                                    setCompanyInfo(prev => ({
+                                        ...prev,
+                                        ...preset, // merge all preset fields
+                                    }))
+                                } else {
+                                    setCompanyInfo(prev => ({
+                                        ...prev,
+                                        name: value,
+                                    }))
+                                }
+                            }}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select company name" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="PT. SARR ADHIKARI COMPANY">
+                                    PT. SARR ADHIKARI COMPANY
+                                </SelectItem>
+                                <SelectItem value="CV. SELAMAT SENTOSA">
+                                    CV. SELAMAT SENTOSA
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </label>
+
                     <label className="flex flex-col">
                         <span className="text-xs text-muted-foreground mb-1">Invoice number</span>
                         <Input
@@ -42,14 +100,6 @@ export default function InvoiceForm({ invoice, setInvoice }: Props) {
                     </label>
 
                     <div className="grid grid-cols-1 gap-3">
-                        {/* <label className="flex flex-col">
-                            <span className="text-xs text-muted-foreground mb-1">Issue date</span>
-                            <Input
-                                type="date"
-                                value={invoice.issue_date}
-                                onChange={(e) => updateField('issue_date', e.target.value)}
-                            />
-                        </label> */}
 
                         <label className="flex flex-col">
                             <span className="text-xs text-muted-foreground mb-1">Due date</span>
@@ -76,7 +126,7 @@ export default function InvoiceForm({ invoice, setInvoice }: Props) {
                             placeholder="Company (optional)"
                             value={invoice.bill_to?.company || ''}
                             onChange={(e) => updateBillTo({ company: e.target.value })}
-                        />
+                        /> */}
                         <Textarea
                             placeholder="Billing address"
                             rows={3}
@@ -87,7 +137,12 @@ export default function InvoiceForm({ invoice, setInvoice }: Props) {
                             placeholder="Phone (e.g. 0812-XXX)"
                             value={invoice.bill_to?.phone || ''}
                             onChange={(e) => updateBillTo({ phone: e.target.value })}
-                        /> */}
+                        />
+                        <Input
+                            placeholder="Email (e.g. hello@gmail.com)"
+                            value={invoice.bill_to?.email || ''}
+                            onChange={(e) => updateBillTo({ email: e.target.value })}
+                        />
                     </div>
                 </div>
 

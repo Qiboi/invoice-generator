@@ -1,6 +1,4 @@
 'use client'
-
-import React from 'react'
 import {
     Table,
     TableBody,
@@ -34,25 +32,10 @@ export default function InvoiceItemsTable({
     items,
     editable = true,
     onChange,
-    onAdd,
     onRemove,
 }: Props) {
     const updateItem = (id: string, patch: Partial<InvoiceItem>) => {
         onChange?.(items.map(it => (it.id === id ? { ...it, ...patch } : it)))
-    }
-
-    const handleAdd = () => {
-        if (onAdd) return onAdd()
-        onChange?.([
-            ...items,
-            {
-                id: crypto.randomUUID(),
-                description: '',
-                quantity: 1,
-                unit: '',
-                unit_price: 0,
-            },
-        ])
     }
 
     const handleRemove = (id: string) => {
@@ -173,14 +156,6 @@ export default function InvoiceItemsTable({
                     })}
                 </TableBody>
             </Table>
-
-            {/* {editable && (
-                <div className="mt-3 flex justify-end">
-                    <Button onClick={handleAdd} variant="secondary" size="sm">
-                        + Add item
-                    </Button>
-                </div>
-            )} */}
         </div>
     )
 }

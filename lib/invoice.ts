@@ -1,4 +1,6 @@
 // lib/invoice.ts
+import { Company } from "./company";
+
 export type InvoiceItem = {
     id: string;
     description: string;
@@ -34,6 +36,7 @@ export type Invoice = {
 
 export type InvoiceComputed = Invoice & {
     items: (InvoiceItem & { line_total: number })[];
+    company_info?: Company;
     subtotal: number;
     taxesAmount: number;
     total: number;
@@ -47,7 +50,7 @@ export type InvoiceComputed = Invoice & {
  *   2) Else if invoice.taxes present and tax.rate provided -> sum subtotal * rate
  *   3) Else taxesAmount = 0
  */
-export function calcTotals(invoice: Invoice): InvoiceComputed {
+export function calcTotals(invoice: Invoice, company: Company): InvoiceComputed {
     const itemsWithLine = (invoice.items || []).map((it) => {
         const line = Number(it.quantity || 0) * Number(it.unit_price || 0);
         return { ...it, line_total: Math.round(line) };
@@ -78,6 +81,7 @@ export function calcTotals(invoice: Invoice): InvoiceComputed {
 
     return {
         ...invoice,
+        company_info: company,
         items: itemsWithLine,
         subtotal: Math.round(subtotal),
         taxesAmount: Math.round(taxesAmount),

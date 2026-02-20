@@ -11,88 +11,137 @@ export type InvoicePreviewProps = {
 
 export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
     return (
-        <div id="invoice-preview" className="invoice">
+        <div className="w-full overflow-x-auto">
+            {/* preview frame (screen only) */}
+            <div className="bg-black/4 p-6 rounded-xl print:bg-transparent print:p-0 print:rounded-none">
+                {/* The actual invoice sheet — note: using inline mm sizes for print-accuracy */}
+                <div
+                    id="invoice-preview"
+                    className="relative box-border bg-white text-black font-sans text-sm"
+                    style={{
+                        width: '210mm',
+                        minHeight: '287mm',
+                        padding: '20mm',
+                        boxSizing: 'border-box',
+                    }}
+                >
+                    {/* HEADER */}
+                    <div className="flex justify-between items-start mb-6">
+                        <div>
+                            <div className="text-2xl font-bold">
+                                {invoice.company_info?.name}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                                <div>{invoice.company_info?.address}</div>
+                                <div>{invoice.company_info?.phone}</div>
+                            </div>
+                        </div>
 
-            {/* HEADER */}
-            <div className="invoice-header">
-                <div>
-                    <div className="invoice-company">
-                        {process.env.NEXT_PUBLIC_COMPANY_NAME}
+                        <div className="text-right">
+                            <div className="text-2xl font-bold">
+                                Invoice
+                            </div>
+                            <div className="text-xs">
+                                <div>{invoice.invoice_number}</div>
+                                <div>Submitted on {invoice.issue_date}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="invoice-company-info">
-                        <div>{process.env.NEXT_PUBLIC_COMPANY_ADDRESS}</div>
-                        <div>{process.env.NEXT_PUBLIC_COMPANY_PHONE}</div>
+
+                    {/* META */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <div className="text-[10px] uppercase text-gray-500">Invoice for</div>
+                            <div className="text-sm font-semibold">{invoice.bill_to.name}</div>
+                            <div className="text-xs">{invoice.bill_to.address}</div>
+                            <div className="text-xs">Phone : {invoice.bill_to.phone}</div>
+                            <div className="text-xs">Email : {invoice.bill_to.email}</div>
+
+                        </div>
+
+                        {/* <div>
+                            <div className="text-[10px] uppercase text-gray-500">Invoice #</div>
+                            <div className="text-sm font-semibold">{invoice.invoice_number}</div>
+                        </div> */}
+
+                        <div className='text-right'>
+                            <div className="text-[10px] uppercase text-gray-500">Due date</div>
+                            <div className="text-sm font-semibold">{invoice.due_date}</div>
+                        </div>
+                    </div>
+
+                    {/* ITEMS TABLE */}
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse mb-5">
+                            <thead>
+                                <tr>
+                                    <th className="text-left text-[11px] pr-2 pb-2 border-b border-gray-200">Description</th>
+                                    <th className="text-right text-[11px] px-2 pb-2 border-b border-gray-200">Qty</th>
+                                    <th className="text-right text-[11px] px-2 pb-2 border-b border-gray-200">Unit</th>
+                                    <th className="text-right text-[11px] px-2 pb-2 border-b border-gray-200">Unit price</th>
+                                    <th className="text-right text-[11px] px-2 pb-2 border-b border-gray-200">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {invoice.items.map((item, idx) => (
+                                    <tr
+                                        key={item.id}
+                                        className={idx % 2 === 1 ? 'bg-gray-50' : ''}
+                                        style={{ pageBreakInside: 'avoid' }}
+                                    >
+                                        <td className="py-2 align-top text-[11px] pr-2">
+                                            {item.description}
+                                        </td>
+                                        <td className="py-2 align-top text-[11px] px-2 text-right">
+                                            {item.quantity}
+                                        </td>
+                                        <td className="py-2 align-top text-[11px] px-2 text-right">
+                                            {item.unit}
+                                        </td>
+                                        <td className="py-2 align-top text-[11px] px-2 text-right">
+                                            {formatRupiah(item.unit_price)}
+                                        </td>
+                                        <td className="py-2 align-top text-[11px] px-2 text-right">
+                                            {formatRupiah(item.line_total || 0)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* TOTALS */}
+                    <div className="w-full flex justify-end">
+                        <div className="w-1/3">
+                            <div className="flex justify-between mb-1 text-sm">
+                                <span>Subtotal</span>
+                                <span className="font-semibold">{formatRupiah(invoice.subtotal || 0)}</span>
+                            </div>
+
+                            <div className="flex justify-between border-t border-gray-300 pt-2 text-sm font-semibold">
+                                <span>Total</span>
+                                <span>{formatRupiah(invoice.total || 0)}</span>
+                            </div>
+
+                            {/* <div className="text-right text-2xl mt-3">
+                                {formatRupiah(invoice.total || 0)}
+                            </div> */}
+                        </div>
+                    </div>
+
+                    {/* FOOTER */}
+                    <div
+                        className="invoice-footer absolute text-xs text-gray-600"
+                        style={{
+                            bottom: '20mm',
+                            left: '20mm',
+                            right: '20mm',
+                        }}
+
+                    >
+                        Payment instructions : {process.env.NEXT_PUBLIC_COMPANY_BANK}
                     </div>
                 </div>
-
-                <div className="invoice-title">
-                    <h1>Invoice</h1>
-                    <div className="invoice-submitted">
-                        Submitted on {invoice.issue_date}
-                    </div>
-                </div>
-            </div>
-
-            {/* META */}
-            <div className="invoice-meta">
-                <div>
-                    <div className="invoice-meta-title">Invoice for</div>
-                    <div className="invoice-meta-value">{invoice.bill_to.name}</div>
-                </div>
-
-                <div>
-                    <div className="invoice-meta-title">Invoice #</div>
-                    <div className="invoice-meta-value">{invoice.invoice_number}</div>
-                </div>
-
-                <div>
-                    <div className="invoice-meta-title">Due date</div>
-                    <div className="invoice-meta-value">{invoice.due_date}</div>
-                </div>
-            </div>
-
-            {/* ITEMS TABLE */}
-            <table className="invoice-table">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Qty</th>
-                        <th>Unit price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {invoice.items.map(item => (
-                        <tr key={item.id}>
-                            <td>{item.description}</td>
-                            <td style={{ textAlign: 'right' }}>{item.quantity}</td>
-                            <td style={{ textAlign: 'right' }}>{formatRupiah(item.unit_price)}</td>
-                            <td style={{ textAlign: 'right' }}>{formatRupiah(item.line_total || 0)}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* TOTALS */}
-            <div className="invoice-summary">
-                <div className="invoice-summary-row">
-                    <span>Subtotal</span>
-                    <span>{formatRupiah(invoice.subtotal || 0)}</span>
-                </div>
-
-                <div className="invoice-summary-row invoice-summary-total">
-                    <span>Total</span>
-                    <span>{formatRupiah(invoice.total || 0)}</span>
-                </div>
-
-                <div className="invoice-summary-grand">
-                    {formatRupiah(invoice.total || 0)}
-                </div>
-            </div>
-
-            {/* FOOTER */}
-            <div className="invoice-footer">
-                Payment instructions: {process.env.NEXT_PUBLIC_COMPANY_BANK}
             </div>
         </div>
     )
