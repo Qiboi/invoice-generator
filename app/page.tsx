@@ -33,7 +33,7 @@ export default function HomePage() {
                 </Button>
               </Link>
 
-              <Link href="/receipts" className="w-full sm:w-auto">
+              <Link href="/receipt" className="w-full sm:w-auto">
                 <Button variant="outline" aria-label="Go to receipt builder" className="inline-flex items-center gap-2">
                   Mulai Buat Kwitansi
                   <ArrowRight size={16} />
