@@ -3,26 +3,26 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardTitle } from '@/components/ui/card'
-import { ArrowRight, FileText, Feather, Printer } from 'lucide-react'
+import { ArrowRight, FileText, Feather, Printer, FileText as ReceiptIcon } from 'lucide-react'
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-neutral-50 text-slate-900">
-      <section className="max-w-7xl mx-auto px-6 py-20 lg:py-32">
+      <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           {/* LEFT: Hero text */}
           <div className="space-y-6">
             <div className="inline-flex items-center gap-3">
               <span className="inline-block bg-indigo-600 text-white text-xs font-medium px-3 py-1 rounded-full">Demo</span>
-              <span className="text-sm text-muted-foreground">Invoice generator</span>
+              <span className="text-sm text-muted-foreground">Invoice & Kwitansi generator</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight">
-              Buat invoice profesional, cepat — langsung unduh PDF.
+              Buat invoice dan kwitansi profesional, cepat — langsung unduh PDF.
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Generator invoice sederhana dan print-ready. Isi data di form, lihat preview A4, lalu unduh PDF.
+              Generator sederhana yang print-ready. Isi data di form, lihat preview, lalu ekspor ke PDF — tersedia template A4 untuk invoice dan ukuran kwitansi khusus.
             </p>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -33,16 +33,17 @@ export default function HomePage() {
                 </Button>
               </Link>
 
-              {/* <a href="#features" className="w-full sm:w-auto">
-                <Button variant="ghost" className="inline-flex items-center gap-2">
-                  Lihat Fitur
+              <Link href="/receipts" className="w-full sm:w-auto">
+                <Button variant="outline" aria-label="Go to receipt builder" className="inline-flex items-center gap-2">
+                  Mulai Buat Kwitansi
+                  <ArrowRight size={16} />
                 </Button>
-              </a> */}
+              </Link>
             </div>
 
             <div className="flex items-center gap-6 pt-6">
               <div className="text-sm text-muted-foreground">
-                <div>Template: A4 Print-ready</div>
+                <div>Template: A4 untuk invoice • Kwitansi custom-size</div>
                 <div>Export: Save as PDF (browser)</div>
               </div>
             </div>
@@ -54,7 +55,7 @@ export default function HomePage() {
             <div className="w-full max-w-md rounded-xl shadow-lg overflow-hidden">
               <Image
                 src="/assets/hero.jpg"
-                alt="Invoice sample preview"
+                alt="Invoice & receipt sample preview"
                 width={760}
                 height={540}
                 className="object-cover w-full h-full"
@@ -77,7 +78,7 @@ export default function HomePage() {
             </CardTitle>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Preview A4 yang siap dicetak dan tombol Export yang memanggil fitur Print/Save as PDF.
+                Preview yang siap dicetak dan tombol Export yang memanggil fitur Print/Save as PDF. Tersedia A4 untuk invoice dan ukuran kwitansi khusus untuk kwitansi.
               </p>
             </CardContent>
           </Card>
@@ -91,7 +92,7 @@ export default function HomePage() {
             </CardTitle>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Edit detail klien, tambahkan baris item, sesuaikan notes dan payment instructions.
+                Edit detail klien/perusahaan, tambahkan baris item, sesuaikan notes dan instruksi pembayaran. Pilih perusahaan untuk auto-fill alamat & nomor telepon.
               </p>
             </CardContent>
           </Card>
@@ -105,30 +106,12 @@ export default function HomePage() {
             </CardTitle>
             <CardContent>
               <p className="text-sm text-muted-foreground">
-                Print CSS dan layout A4 yang menjaga tampilan saat disimpan sebagai PDF.
+                Print CSS dan layout menjaga tampilan saat disimpan sebagai PDF. Dukungan custom page size untuk kwitansi.
               </p>
             </CardContent>
           </Card>
         </div>
       </section>
-
-      {/* Footer */}
-      {/* <footer className="max-w-7xl mx-auto px-6 py-8 text-sm text-muted-foreground">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Image src="/assets/logo.png" alt="logo" width={40} height={40} className="rounded" />
-            <div>
-              <div className="font-medium">{process.env.NEXT_PUBLIC_COMPANY_NAME || 'Nama Perusahaan'}</div>
-              <div>{process.env.NEXT_PUBLIC_COMPANY_ADDRESS}</div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <a href="/invoice" className="underline">Buat Invoice</a>
-            <a href="#" className="underline">Dokumentasi</a>
-          </div>
-        </div>
-      </footer> */}
     </main>
   )
 }
