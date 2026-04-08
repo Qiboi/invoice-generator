@@ -29,13 +29,13 @@ export default function ReceiptForm({ receipt, companyInfo, setReceipt, setCompa
     const companyOptions: Company[] = [
         {
             name: 'PT. SARR ADHIKARI COMPANY',
-            address: 'Jalan Kungkung No.12, Jakarta Selatan',
-            phone: '(021) 12345678',
+            address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+            phone: '0821-3018-2901',
         },
         {
-            name: 'CV. SELAMAT SENTOSA',
-            address: 'Jl. Mawar No.3, Bandung',
-            phone: '0812-3456-7890',
+            name: 'CV. ARUNA KARYA GROUP',
+            address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+            phone: '0821-3018-2901',
         },
     ]
 
@@ -61,7 +61,7 @@ export default function ReceiptForm({ receipt, companyInfo, setReceipt, setCompa
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="PT. SARR ADHIKARI COMPANY">PT. SARR ADHIKARI COMPANY</SelectItem>
-                            <SelectItem value="CV. SELAMAT SENTOSA">CV. SELAMAT SENTOSA</SelectItem>
+                            <SelectItem value="CV. ARUNA KARYA GROUP">CV. ARUNA KARYA GROUP</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

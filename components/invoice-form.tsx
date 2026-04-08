@@ -35,13 +35,15 @@ export default function InvoiceForm({ invoice, companyInfo, setInvoice, setCompa
     const companyOptions: Company[] = [
         {
             name: 'PT. SARR ADHIKARI COMPANY',
-            address: 'Jalan Kungkung No.12, Jakarta Selatan',
-            phone: '(021) 12345678',
+            address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+            phone: '0821-3018-2901',
+            bank_account: "BNI 2039890073 a/n PT. SARR ADHIKARI COMPANY",
         },
         {
-            name: 'CV. SELAMAT SENTOSA',
-            address: 'Jl. Mawar No.3, Bandung',
-            phone: '0812-3456-7890',
+            name: 'CV. ARUNA KARYA GROUP',
+            address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+            phone: '0821-3018-2901',
+            bank_account: "BNI 203959001 a/n CV. ARUNA KARYA GROUP",
         },
     ]
 
@@ -83,8 +85,8 @@ export default function InvoiceForm({ invoice, companyInfo, setInvoice, setCompa
                                 <SelectItem value="PT. SARR ADHIKARI COMPANY">
                                     PT. SARR ADHIKARI COMPANY
                                 </SelectItem>
-                                <SelectItem value="CV. SELAMAT SENTOSA">
-                                    CV. SELAMAT SENTOSA
+                                <SelectItem value="CV. ARUNA KARYA GROUP">
+                                    CV. ARUNA KARYA GROUP
                                 </SelectItem>
                             </SelectContent>
                         </Select>
@@ -93,7 +95,7 @@ export default function InvoiceForm({ invoice, companyInfo, setInvoice, setCompa
                     <label className="flex flex-col">
                         <span className="text-xs text-muted-foreground mb-1">Invoice number</span>
                         <Input
-                            placeholder="INV-001"
+                            placeholder="001/INV-SARR/IV/2026"
                             value={invoice.invoice_number}
                             onChange={(e) => updateField('invoice_number', e.target.value)}
                         />

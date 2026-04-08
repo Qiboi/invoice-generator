@@ -9,7 +9,7 @@ import { Company } from '@/lib/company'
 
 
 const initialInvoice: Invoice = {
-    invoice_number: 'INV-001',
+    invoice_number: '001/INV-SARR/IV/2026',
     issue_date: new Date().toISOString().slice(0, 10),
     due_date: new Date().toISOString().slice(0, 10),
     currency: 'IDR',
@@ -35,8 +35,9 @@ const initialInvoice: Invoice = {
 
 const initialComapnyInfo: Company = {
     name: 'PT. SARR ADHIKARI COMPANY',
-    address: 'Jalan Kungkung, Jakarta Selatan',
-    phone: '(021) 12345678',
+    address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+    phone: '0821-3018-2901',
+    bank_account: 'BNI 2039890073 a/n PT. SARR ADHIKARI COMPANY',
 }
 
 export default function InvoicePage() {

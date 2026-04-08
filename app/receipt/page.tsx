@@ -8,7 +8,7 @@ import ActionBar from '@/components/action-bar'
 import { Company } from '@/lib/company'
 
 const defaultReceipt: Receipt = {
-    receipt_number: '001/KA/2026',
+    receipt_number: '001/KW-SARR/IV/2026',
     received_from: 'PT Maju Jaya Sejahtera',
     payment_for: 'Pembelian bahan baku ayam potong segar',
     amount_numeric: 2500000,
@@ -20,8 +20,8 @@ const defaultReceipt: Receipt = {
 
 const initialComapnyInfo: Company = {
     name: 'PT. SARR ADHIKARI COMPANY',
-    address: 'Jalan Kungkung, Jakarta Selatan',
-    phone: '(021) 12345678',
+    address: 'Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.',
+    phone: '0821-3018-2901',
 }
 
 export default function ReceiptPage() {

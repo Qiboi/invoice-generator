@@ -26,8 +26,8 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
                     }}
                 >
                     {/* HEADER */}
-                    <div className="flex justify-between items-start mb-6">
-                        <div>
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                        <div className='col-span-2'>
                             <div className="text-2xl font-bold">
                                 {invoice.company_info?.name}
                             </div>
@@ -139,7 +139,7 @@ export default function InvoicePreview({ invoice }: InvoicePreviewProps) {
                         }}
 
                     >
-                        Payment instructions : {process.env.NEXT_PUBLIC_COMPANY_BANK}
+                        Payment instructions : {invoice.company_info?.bank_account ? invoice.company_info.bank_account : 'Please transfer to our bank account at BCA 123-456-7890 a/n PT. SARR ADHIKARI COMPANY'}
                     </div>
                 </div>
             </div>
