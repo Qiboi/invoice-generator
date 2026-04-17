@@ -49,12 +49,12 @@ export default function InvoicePage() {
         <div className="min-h-screen bg-neutral-50 print:bg-white print:pt-0">
             {/* top bar */}
             <div className="no-print border-b bg-white">
-                <ActionBar
+                {/* <ActionBar
                     title='Create Invoice'
                     data={invoice}
                     setData={setInvoice}
                     storageKey="invoice:draft"
-                />
+                /> */}
             </div>
 
             {/* main content */}
@@ -73,7 +73,7 @@ export default function InvoicePage() {
                     {/* visual frame only, NOT scroll */}
                     <main className="flex justify-center print:block">
                         <div className="invoice-preview-frame">
-                            <InvoicePreview invoice={computedInvoice} />
+                            {/* <InvoicePreview invoice={computedInvoice} /> */}
                         </div>
                     </main>
 

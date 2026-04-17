@@ -2,22 +2,12 @@
 
 import * as React from "react"
 import {
-  IconDashboard,
   IconFileInvoice,
   IconReceipt,
-  IconUsers,
-  IconPackage,
-  IconReport,
-  IconDatabaseExport,
-  IconSettings,
-  IconHelp,
-  IconSearch,
   IconInnerShadowTop,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -28,6 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
 
 const data = {
   user: {
@@ -38,50 +29,14 @@ const data = {
 
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
       title: "Invoice",
-      url: "/dashboard/invoice",
+      url: "/dashboard/invoices",
       icon: IconFileInvoice,
     },
     {
       title: "Kwitansi",
       url: "/dashboard/kwitansi",
       icon: IconReceipt,
-    },
-  ],
-
-  documents: [
-    {
-      name: "Customers",
-      url: "/dashboard/customers",
-      icon: IconUsers,
-    },
-    {
-      name: "Products / Services",
-      url: "/dashboard/products",
-      icon: IconPackage,
-    },
-    {
-      name: "Reports",
-      url: "/dashboard/reports",
-      icon: IconReport,
-    },
-    {
-      name: "Export Data",
-      url: "/dashboard/export",
-      icon: IconDatabaseExport,
-    },
-  ],
-
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
     },
   ],
 }
@@ -96,12 +51,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <a href="/dashboard">
+              <Link href="/dashboard" className="flex items-center gap-2">
                 <IconInnerShadowTop className="size-5!" />
                 <span className="text-base font-semibold">
                   Invoice System
                 </span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -109,8 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavDocuments items={data.documents} /> */}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter>

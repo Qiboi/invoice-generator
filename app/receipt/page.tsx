@@ -51,7 +51,7 @@ export default function ReceiptPage() {
     return (
         <div className="space-y-6">
             <div className="no-print border-b bg-white">
-                <ActionBar
+                {/* <ActionBar
                     title='Create Receipt'
                     data={receipt}
                     setData={setReceipt}
@@ -59,7 +59,7 @@ export default function ReceiptPage() {
                     exportLabel="Export PDF"
                     printPageSize="315mm 100mm"
                     printMargin="5mm 5mm"
-                />
+                /> */}
             </div>
 
             <div className="max-w-7xl mx-auto px-6 py-4">

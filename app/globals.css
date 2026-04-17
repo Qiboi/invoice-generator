@@ -173,6 +173,10 @@
     left: 0mm !important;
     right: 0mm !important;
   }
+  
+  thead { display: table-header-group; }
+  tfoot { display: table-footer-group; }
+  tr { page-break-inside: avoid; }
 
   #receipt-preview {
     width: auto !important;
@@ -188,7 +192,4 @@
     color: #666;
   }
 
-  thead { display: table-header-group; }
-  tfoot { display: table-footer-group; }
-  tr { page-break-inside: avoid; }
 }
