@@ -22,8 +22,8 @@ import Link from "next/link"
 
 const data = {
   user: {
-    name: "Qiboi",
-    email: "qiboi@example.com",
+    name: "Admin",
+    email: "admin@gmail.com",
     avatar: "/avatars/user.jpg",
   },
 
