@@ -1,55 +1,58 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState } from "react"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
-    const router = useRouter();
+    const router = useRouter()
     const [form, setForm] = useState({
         email: "",
         password: "",
-    });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    })
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({
             ...form,
             [e.target.name]: e.target.value,
-        });
-    };
+        })
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError("");
+        e.preventDefault()
+        setLoading(true)
+        setError("")
 
         const res = await signIn("credentials", {
             email: form.email,
             password: form.password,
             redirect: false,
-        });
+        })
 
         if (res?.error) {
-            setError("Email atau password salah");
-            setLoading(false);
-            return;
+            setError("Email atau password salah")
+            setLoading(false)
+            return
         }
 
-        router.push("/dashboard");
-    };
+        router.push("/dashboard")
+    }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="w-full max-w-md rounded-2xl border p-6 shadow-sm">
-                <h1 className="mb-6 text-2xl font-bold">Login</h1>
+        <div className="min-h-screen flex items-center justify-center bg-white p-4">
+            <div className="w-full max-w-md rounded-2xl border border-black/10 bg-white p-6 shadow-sm">
+                <div className="mb-6">
+                    <h1 className="text-2xl font-bold text-black">Login</h1>
+                    <p className="mt-1 text-sm text-neutral-600">
+                        Masuk untuk melanjutkan
+                    </p>
+                </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="mb-1 block text-sm font-medium">
+                        <label className="mb-1 block text-sm font-medium text-black">
                             Email
                         </label>
                         <input
@@ -57,14 +60,14 @@ export default function LoginPage() {
                             name="email"
                             value={form.email}
                             onChange={handleChange}
-                            className="w-full rounded-lg border px-3 py-2 outline-none"
+                            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-black outline-none focus:border-black/30"
                             placeholder="email@example.com"
                             required
                         />
                     </div>
 
                     <div>
-                        <label className="mb-1 block text-sm font-medium">
+                        <label className="mb-1 block text-sm font-medium text-black">
                             Password
                         </label>
                         <input
@@ -72,25 +75,27 @@ export default function LoginPage() {
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            className="w-full rounded-lg border px-3 py-2 outline-none"
+                            className="w-full rounded-lg border border-black/10 bg-white px-3 py-2 text-black outline-none focus:border-black/30"
                             placeholder="Masukkan password"
                             required
                         />
                     </div>
 
                     {error && (
-                        <p className="text-sm text-red-600">{error}</p>
+                        <p className="rounded-lg border border-black/10 bg-black/5 px-3 py-2 text-sm text-black">
+                            {error}
+                        </p>
                     )}
 
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full rounded-lg bg-black px-4 py-2 text-white disabled:opacity-60"
+                        className="w-full rounded-lg bg-black px-4 py-2 text-white transition hover:bg-black/90 disabled:opacity-60"
                     >
-                        {loading ? "Masuk..." : "Login"}
+                        {loading ? "Memproses..." : "Login"}
                     </button>
                 </form>
             </div>
         </div>
-    );
+    )
 }

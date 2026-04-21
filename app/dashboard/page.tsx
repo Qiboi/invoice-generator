@@ -1,105 +1,134 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useState } from "react"
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
+import { useEffect, useMemo, useState } from "react"
 import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
 
-type InvoiceData = {
-  id: number
+type DashboardRow = {
+  id: string
   number: string
   type: "invoice" | "kwitansi"
   customer: string
   amount: number
-  status: "unpaid" | "paid" | "overdue"
+  status: "draft" | "paid" | "unpaid" | "overdue"
   date: string
   due_date: string | null
   items: number
 }
 
-const sampleData: InvoiceData[] = [
-  {
-    id: 1,
-    number: "INV-2026-001",
-    type: "invoice",
-    customer: "PT. Maju Jaya",
-    amount: 1250000,
-    status: "unpaid",
-    date: "2026-02-20",
-    due_date: "2026-03-20",
-    items: 3,
-  },
-  {
-    id: 2,
-    number: "KW-2026-001",
-    type: "kwitansi",
-    customer: "Budi Santoso",
-    amount: 250000,
-    status: "paid",
-    date: "2026-02-25",
-    due_date: null,
-    items: 1,
-  },
-  {
-    id: 3,
-    number: "INV-2026-002",
-    type: "invoice",
-    customer: "CV. Sukses Selalu",
-    amount: 3500000,
-    status: "paid",
-    date: "2026-01-30",
-    due_date: "2026-02-28",
-    items: 5,
-  },
-  {
-    id: 4,
-    number: "INV-2026-003",
-    type: "invoice",
-    customer: "Toko Indah",
-    amount: 980000,
-    status: "overdue",
-    date: "2025-12-15",
-    due_date: "2026-01-15",
-    items: 2,
-  },
-  {
-    id: 5,
-    number: "KW-2026-002",
-    type: "kwitansi",
-    customer: "Sari Alam",
-    amount: 500000,
-    status: "paid",
-    date: "2026-02-10",
-    due_date: null,
-    items: 1,
-  },
-  {
-    id: 6,
-    number: "INV-2026-004",
-    type: "invoice",
-    customer: "PT. Berkah Abadi",
-    amount: 420000,
-    status: "unpaid",
-    date: "2026-02-28",
-    due_date: "2026-03-30",
-    items: 2,
-  },
-]
+type DashboardStats = {
+  totalRevenue: number
+  totalInvoices: number
+  unpaidInvoices: number
+  totalCustomers: number
+}
 
 export default function Page() {
-  const [data] = useState<InvoiceData[]>(sampleData)
+  const [data, setData] = useState<DashboardRow[]>([])
+  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStats>({
+    totalRevenue: 0,
+    totalInvoices: 0,
+    unpaidInvoices: 0,
+    totalCustomers: 0,
+  })
+
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        const [invoiceRes, receiptRes] = await Promise.all([
+          fetch("/api/invoices"),
+          fetch("/api/receipts"),
+        ])
+
+        const [invoices, receipts] = await Promise.all([
+          invoiceRes.json(),
+          receiptRes.json(),
+        ])
+
+        const invoiceRows: DashboardRow[] = (invoices || []).map((item: any) => ({
+          id: String(item._id),
+          number: item.invoice_number,
+          type: "invoice",
+          customer: item.invoice?.bill_to?.name || "-",
+          amount: item.computed?.total || 0,
+          status: item.status || "draft",
+          date:
+            item.computed?.issue_date ||
+            item.invoice?.issue_date ||
+            new Date(item.createdAt).toISOString().slice(0, 10),
+          due_date: item.computed?.due_date || item.invoice?.due_date || null,
+          items: item.computed?.items?.length || item.invoice?.items?.length || 0,
+        }))
+
+        const receiptRows: DashboardRow[] = (receipts || []).map((item: any) => ({
+          id: String(item._id),
+          number: item.receipt_number,
+          type: "kwitansi",
+          customer: item.computed?.received_from || item.receipt?.received_from || "-",
+          amount: item.computed?.total_price || 0,
+          status: "paid",
+          date:
+            item.computed?.date_of_issue ||
+            item.receipt?.date_of_issue ||
+            new Date(item.createdAt).toISOString().slice(0, 10),
+          due_date: null,
+          items: 1,
+        }))
+
+        const merged = [...invoiceRows, ...receiptRows].sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime()
+        })
+
+        const totalRevenue = merged.reduce((sum, row) => sum + row.amount, 0)
+        const totalInvoices = invoiceRows.length
+        const unpaidInvoices = invoiceRows.filter(
+          (row) => row.status === "unpaid" || row.status === "overdue"
+        ).length
+
+        const totalCustomers = new Set(
+          merged.map((row) => row.customer).filter(Boolean)
+        ).size
+
+        setData(merged)
+        setStats({
+          totalRevenue,
+          totalInvoices,
+          unpaidInvoices,
+          totalCustomers,
+        })
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDashboard()
+  }, [])
+
+  const tableData = useMemo(() => data, [data])
 
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">
       <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <SectionCards />
+        <SectionCards
+          totalRevenue={stats.totalRevenue}
+          totalInvoices={stats.totalInvoices}
+          unpaidInvoices={stats.unpaidInvoices}
+          totalCustomers={stats.totalCustomers}
+        />
 
-        {/* Jika mau aktifkan chart, buka comment ini */}
-        {/* <div className="px-4 lg:px-6">
-          <ChartAreaInteractive />
-        </div> */}
-
-        <DataTable data={data} />
+        <div className="px-4 lg:px-6">
+          {loading ? (
+            <div className="rounded-2xl border bg-background p-6 text-sm text-muted-foreground">
+              Loading dashboard...
+            </div>
+          ) : (
+            <DataTable data={tableData} />
+          )}
+        </div>
       </div>
     </div>
   )

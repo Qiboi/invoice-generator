@@ -93,7 +93,7 @@ export function NavUser({
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <IconUserCircle />
                 Account
@@ -106,9 +106,9 @@ export function NavUser({
                 <IconNotification />
                 Notifications
               </DropdownMenuItem>
-            </DropdownMenuGroup>
+            </DropdownMenuGroup> */}
 
-            <DropdownMenuSeparator />
+            {/* <DropdownMenuSeparator /> */}
 
             <DropdownMenuItem onClick={handleLogout}>
               <IconLogout />

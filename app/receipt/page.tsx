@@ -4,7 +4,6 @@ import React, { useMemo, useState, useEffect } from 'react'
 import ReceiptForm from '@/components/receipt-form'
 import ReceiptPreview from '@/components/receipt-preview'
 import { Receipt, calcReceipt } from '@/lib/receipt'
-import ActionBar from '@/components/action-bar'
 import { Company } from '@/lib/company'
 
 const defaultReceipt: Receipt = {
@@ -50,18 +49,6 @@ export default function ReceiptPage() {
 
     return (
         <div className="space-y-6">
-            <div className="no-print border-b bg-white">
-                {/* <ActionBar
-                    title='Create Receipt'
-                    data={receipt}
-                    setData={setReceipt}
-                    storageKey="receipt:draft"
-                    exportLabel="Export PDF"
-                    printPageSize="315mm 100mm"
-                    printMargin="5mm 5mm"
-                /> */}
-            </div>
-
             <div className="max-w-7xl mx-auto px-6 py-4">
                 <div className="grid grid-cols-1 gap-6">
                     <div className='mx-auto print:mx-0'>

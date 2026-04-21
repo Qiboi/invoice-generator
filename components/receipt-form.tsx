@@ -84,7 +84,8 @@ export default function ReceiptForm({ receipt, companyInfo, setReceipt, setCompa
                     <Label>Nomor Kwitansi</Label>
                     <Input
                         value={receipt.receipt_number}
-                        onChange={(e) => update('receipt_number', e.target.value)}
+                        readOnly
+                        className="bg-muted"
                     />
                 </div>
 

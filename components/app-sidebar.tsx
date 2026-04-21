@@ -4,7 +4,8 @@ import * as React from "react"
 import {
   IconFileInvoice,
   IconReceipt,
-  IconInnerShadowTop,
+  IconLayoutDashboard,
+  IconBuildingStore,
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -29,13 +30,18 @@ const data = {
 
   navMain: [
     {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: IconLayoutDashboard,
+    },
+    {
       title: "Invoice",
       url: "/dashboard/invoices",
       icon: IconFileInvoice,
     },
     {
-      title: "Kwitansi",
-      url: "/dashboard/kwitansi",
+      title: "Receipt",
+      url: "/dashboard/receipts",
       icon: IconReceipt,
     },
   ],
@@ -44,6 +50,8 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
+
+      {/* HEADER / LOGO */}
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -52,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
               <Link href="/dashboard" className="flex items-center gap-2">
-                <IconInnerShadowTop className="size-5!" />
+                <IconBuildingStore className="size-5" />
                 <span className="text-base font-semibold">
                   Invoice System
                 </span>
@@ -62,10 +70,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
 
+      {/* MENU */}
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
 
+      {/* USER */}
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>

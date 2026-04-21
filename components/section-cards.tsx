@@ -1,5 +1,3 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
@@ -10,106 +8,100 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export function SectionCards() {
-  return (
-    <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4 dark:*:data-[slot=card]:bg-card">
+type SectionCardsProps = {
+  totalRevenue: number
+  totalInvoices: number
+  unpaidInvoices: number
+  totalCustomers: number
+}
 
-      {/* Total Revenue */}
+function formatIDR(value: number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value)
+}
+
+export function SectionCards({
+  totalRevenue,
+  totalInvoices,
+  unpaidInvoices,
+  totalCustomers,
+}: SectionCardsProps) {
+  return (
+    <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Revenue</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            Rp 12.500.000
+            {formatIDR(totalRevenue)}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +8.2%
-            </Badge>
+            <Badge variant="outline">Live</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="flex gap-2 font-medium">
-            Revenue increased this month <IconTrendingUp className="size-4" />
-          </div>
+          <div className="font-medium">Gabungan invoice dan kwitansi</div>
           <div className="text-muted-foreground">
-            Compared to last month
+            Total nominal dari seluruh dokumen
           </div>
         </CardFooter>
       </Card>
 
-      {/* Total Invoice */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Invoice</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            128
+            {totalInvoices}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12%
-            </Badge>
+            <Badge variant="outline">Live</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="flex gap-2 font-medium">
-            More invoices issued <IconTrendingUp className="size-4" />
-          </div>
+          <div className="font-medium">Invoice yang sudah dibuat</div>
           <div className="text-muted-foreground">
-            Growth in billing activity
+            Semua invoice tersimpan di database
           </div>
         </CardFooter>
       </Card>
 
-      {/* Unpaid Invoice */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Unpaid Invoice</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            23
+            {unpaidInvoices}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -5%
-            </Badge>
+            <Badge variant="outline">Live</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="flex gap-2 font-medium">
-            Unpaid invoices decreased <IconTrendingDown className="size-4" />
-          </div>
+          <div className="font-medium">Invoice yang belum lunas</div>
           <div className="text-muted-foreground">
-            Payment collection improving
+            Fokus koleksi pembayaran
           </div>
         </CardFooter>
       </Card>
 
-      {/* Total Customers */}
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Customers</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            54
+            {totalCustomers}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +3
-            </Badge>
+            <Badge variant="outline">Live</Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="flex gap-2 font-medium">
-            New customers added <IconTrendingUp className="size-4" />
-          </div>
+          <div className="font-medium">Nama unik customer/penerima</div>
           <div className="text-muted-foreground">
-            Business network expanding
+            Diambil dari invoice dan kwitansi
           </div>
         </CardFooter>
       </Card>
-
     </div>
   )
 }
