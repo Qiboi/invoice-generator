@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -6,6 +7,17 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import ReceiptPreview from "@/components/receipt-preview"
 import { type ReceiptComputed } from "@/lib/receipt"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type ReceiptDB = {
     _id: string
@@ -111,6 +123,36 @@ export default function ReceiptDetailPage() {
         if (params.id) fetchReceipt()
     }, [params.id])
 
+    async function handleDelete(id: string, type: "invoice" | "receipt") {
+        const loadingToast = toast.loading("Menghapus data...")
+
+        try {
+            const res = await fetch(
+                `/api/${type === "invoice" ? "invoices" : "receipts"}/${id}`,
+                { method: "DELETE" }
+            )
+
+            const result = await res.json()
+
+            if (!res.ok) {
+                throw new Error(result.message)
+            }
+
+            toast.success(result.message || "Berhasil dihapus", {
+                id: loadingToast,
+            })
+
+            setTimeout(() => {
+                window.location.href = `/dashboard/${type === "invoice" ? "invoices" : "receipts"}`
+            }, 800)
+
+        } catch (err: any) {
+            toast.error(err.message || "Gagal menghapus data", {
+                id: loadingToast,
+            })
+        }
+    }
+
     if (loading) {
         return <div className="p-6">Loading...</div>
     }
@@ -137,6 +179,32 @@ export default function ReceiptDetailPage() {
                     <Button onClick={exportReceiptWithPrintSize}>
                         Export PDF
                     </Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant={"destructive"}>
+                                Hapus
+                            </Button>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Hapus kwitansi?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Data yang dihapus tidak dapat dikembalikan. Pastikan Anda yakin.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={() => handleDelete(data._id, "receipt")}
+                                    className="bg-red-600 hover:bg-red-700"
+                                >
+                                    Hapus
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
             </div>
 
@@ -145,6 +213,7 @@ export default function ReceiptDetailPage() {
                     <ReceiptPreview receipt={data.computed} />
                 </div>
             </div>
+
         </div>
     )
 }

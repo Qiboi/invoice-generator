@@ -1,4 +1,5 @@
 "use client"
+"use no memo"
 
 import * as React from "react"
 import {
@@ -10,11 +11,7 @@ import {
   type ColumnDef,
   type SortingState,
 } from "@tanstack/react-table"
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDotsVertical,
-} from "@tabler/icons-react"
+import { IconChevronLeft, IconChevronRight, IconDotsVertical } from "@tabler/icons-react"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -32,8 +29,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
-// ================= TYPES =================
 export type InvoiceRow = {
   id: string
   number: string
@@ -46,8 +52,96 @@ export type InvoiceRow = {
   items: number
 }
 
-// ================= COLUMNS =================
-const columns: ColumnDef<InvoiceRow>[] = [
+type DataTableProps = {
+  data: InvoiceRow[]
+  onDelete: (id: string, type: "invoice" | "kwitansi") => Promise<void>
+}
+
+function RowActions({
+  row,
+  onDelete,
+}: {
+  row: InvoiceRow
+  onDelete: (id: string, type: "invoice" | "kwitansi") => Promise<void>
+}) {
+  const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+
+  const handleDelete = async () => {
+    setLoading(true)
+
+    try {
+      await onDelete(row.id, row.type)
+      setOpen(false)
+    } catch {
+      // toast ditangani di parent
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <IconDotsVertical />
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={() =>
+            (window.location.href =
+              row.type === "invoice"
+                ? `/dashboard/invoices/${row.id}`
+                : `/dashboard/receipts/${row.id}`)
+            }
+          >
+            View
+          </DropdownMenuItem>
+
+          {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
+
+          <DropdownMenuItem
+            className="text-red-500"
+            onClick={() => setOpen(true)}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Hapus data?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Data {row.type === "invoice" ? "invoice" : "kwitansi"} ini akan
+              dihapus permanen dan tidak bisa dikembalikan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                handleDelete()
+              }}
+              className="bg-red-600 hover:bg-red-700"
+              disabled={loading}
+            >
+              {loading ? "Menghapus..." : "Hapus"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  )
+}
+
+const columnsBase: ColumnDef<InvoiceRow>[] = [
   {
     accessorKey: "number",
     header: "Number",
@@ -67,9 +161,9 @@ const columns: ColumnDef<InvoiceRow>[] = [
   },
   {
     accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    header: () => <div>Amount</div>,
     cell: ({ row }) => (
-      <div className="text-right font-medium">
+      <div className="font-medium">
         Rp {row.original.amount.toLocaleString()}
       </div>
     ),
@@ -92,56 +186,49 @@ const columns: ColumnDef<InvoiceRow>[] = [
       if (status === "paid") {
         return <Badge className="bg-green-600 text-white">Paid</Badge>
       }
+
       if (status === "overdue") {
         return <Badge variant="destructive">Overdue</Badge>
       }
+
       if (status === "draft") {
         return <Badge variant="outline">Draft</Badge>
       }
+
       return <Badge variant="secondary">Unpaid</Badge>
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <IconDotsVertical />
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() =>
-            (window.location.href =
-              row.original.type === "invoice"
-                ? `/dashboard/invoices/${row.original.id}`
-                : `/dashboard/receipts/${row.original.id}`)
-            }
-          >
-            View
-          </DropdownMenuItem>
-
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem className="text-red-500">
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
 ]
 
-// ================= COMPONENT =================
-export function DataTable({ data }: { data: InvoiceRow[] }) {
+export function DataTable({ data, onDelete }: DataTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const columns = React.useMemo<ColumnDef<InvoiceRow>[]>(
+    () => [
+      ...columnsBase,
+      {
+        id: "actions",
+        cell: ({ row }) => (
+          <RowActions row={row.original} onDelete={onDelete} />
+        ),
+      },
+    ],
+    [onDelete]
+  )
 
   const table = useReactTable({
     data,
     columns,
-    state: { sorting },
+    state: {
+      sorting,
+      pagination,
+    },
     onSortingChange: setSorting,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -149,7 +236,6 @@ export function DataTable({ data }: { data: InvoiceRow[] }) {
 
   return (
     <div className="space-y-4">
-      {/* TABLE */}
       <div className="rounded-xl border bg-white">
         <Table>
           <TableHeader>
@@ -188,7 +274,7 @@ export function DataTable({ data }: { data: InvoiceRow[] }) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center h-24"
+                  className="h-24 text-center"
                 >
                   No data
                 </TableCell>
@@ -198,7 +284,6 @@ export function DataTable({ data }: { data: InvoiceRow[] }) {
         </Table>
       </div>
 
-      {/* PAGINATION */}
       <div className="flex items-center justify-end gap-2">
         <Button
           variant="outline"

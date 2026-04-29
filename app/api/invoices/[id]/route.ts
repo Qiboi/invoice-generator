@@ -3,9 +3,10 @@ import { connectDB } from "@/lib/mongodb"
 import Invoice from "@/models/Invoice"
 
 export async function GET(
-    req: NextRequest, 
-    { params }: { params: Promise<{ id: string }> 
-  }) {
+    req: NextRequest,
+    { params }: {
+        params: Promise<{ id: string }>
+    }) {
     try {
         await connectDB()
         const { id } = await params;
@@ -24,6 +25,35 @@ export async function GET(
         console.error(error)
         return NextResponse.json(
             { message: "Gagal mengambil invoice" },
+            { status: 500 }
+        )
+    }
+}
+
+export async function DELETE(
+    req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    try {
+        await connectDB()
+
+        const { id } = await params
+        const deleted = await Invoice.findByIdAndDelete(id)
+
+        if (!deleted) {
+            return NextResponse.json(
+                { message: "Invoice tidak ditemukan" },
+                { status: 404 }
+            )
+        }
+
+        return NextResponse.json({
+            message: "Invoice berhasil dihapus",
+        })
+    } catch (error) {
+        console.error(error)
+        return NextResponse.json(
+            { message: "Gagal menghapus invoice" },
             { status: 500 }
         )
     }
