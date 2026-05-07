@@ -49,7 +49,7 @@ export default function InvoiceForm({
             address:
                 "Komp. Permata Biru Blok AD Baru, No. 18, Kelurahaan Cinunuk, Kec. Cileunyi, Kab. Bandung, Jawa Barat.",
             phone: "0821-3018-2901",
-            bank_account: "BNI 203959001 a/n CV. ARUNA KARYA GROUP",
+            bank_account: "BNI 2039590091 a/n CV. ARUNA KARYA GROUP",
         },
     ]
 
