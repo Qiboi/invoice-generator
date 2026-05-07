@@ -17,6 +17,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import Link from "next/link"
 
 export default function InvoiceDetailPage() {
     const { id } = useParams<{ id: string }>()
@@ -114,6 +115,10 @@ export default function InvoiceDetailPage() {
                     </Button>
 
                     <Button onClick={handleExport}>Export PDF</Button>
+
+                    <Link href={`/dashboard/invoices/${id}/edit`}>
+                        <Button className="bg-green-500 text-white">Edit</Button>
+                    </Link>
 
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
